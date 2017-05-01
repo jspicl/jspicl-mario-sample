@@ -7,17 +7,21 @@ npm install
 ```
 
 ### Usage
-Copy the `mario.p8` sample cartridge to your PICO-8 carts folder.
+Update the `dest` property in `package.json` to point to your PICO-8 carts folder.
 
-To generate the LUA code run:
 
 ```
 npm start
 ```
 
-This will keep watching the source files for changes and recompile in the background.
+This will generate the cart and keep watching the source files for changes.
 
-Copy the generated code from `build/bundle.lua` and paste it in the PICO-8 code editor.
+Boot up PICO-8 and run the game.
+
+```
+load mario-sample
+run
+```
 
 ## Versioning
 This project uses semantic versioning
