@@ -3,7 +3,7 @@ import { updatePhysics } from "./physics";
 import { updateAnimation } from "./animation";
 import { createActor } from "./factories";
 import { RIGHT } from "./constants";
-import { clearLog } from "./utilities";
+import { clearLog } from "./debug";
 import * as SPRITES from "./sprites";
 
 export {
@@ -41,7 +41,7 @@ function draw () {
   const cameraX = player.x - 60;
   const cameraY = player.y - 60;
 
-  rectfill(cameraX, cameraY, cameraX + 128, cameraY + 128, 0);
+  rectfill(cameraX - 1, cameraY - 1, cameraX + 129, cameraY + 129, 0);
   camera(cameraX, cameraY);
 
   map(Math.floor(cameraX / 8), Math.floor(cameraY / 8), Math.floor(cameraX / 8) * 8, Math.floor(cameraY / 8) * 8, 17, 17);

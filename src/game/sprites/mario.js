@@ -1,7 +1,7 @@
 import { createKeyframeAnimation } from "../factories";
 
 export const mario = {
-  default: createKeyframeAnimation(11, 1, 1, 2, 2),
-  run: createKeyframeAnimation(1, 4, 0.15, 2, 2),
-  jump: createKeyframeAnimation(9, 1, 1, 2, 2)
+  default: createKeyframeAnimation(1, 1, 1, 1, 1),
+  run: createKeyframeAnimation(2, 2, 0.15, 1, 1),
+  jump: createKeyframeAnimation(4, 1, 1, 1, 1)
 };

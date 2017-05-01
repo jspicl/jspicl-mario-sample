@@ -1,13 +1,14 @@
 import buble from "rollup-plugin-buble";
 import conditional from "rollup-plugin-conditional";
-import filesize from "rollup-plugin-filesize";
 import includePaths from "rollup-plugin-includepaths";
 import uglify from "rollup-plugin-uglify";
 import jspicl from "rollup-plugin-jspicl";
 
+const packageJson = require("./package.json");
+
 export default {
-  entry: "src/bootstrap.js",
-  dest: "build/bundle.lua",
+  entry: packageJson.config.entry,
+  dest: packageJson.config.dest,
   format: "es",
   plugins: [
     includePaths({
@@ -17,11 +18,14 @@ export default {
     conditional(false, [
       uglify()
     ]),
-    filesize({
-      render: (options, size) => `\x1b[32mApplication bundle size: \x1b[33m${size}`
-    }),
+    {
+      transformBundle: function (source) {
+        return source.replace(/\/\/ <!-- DEBUG[^\/\/]*\/\/\s-->/g, "");
+      }
+    },
     jspicl({
-      jsOutput: "build/bundle.js"
+      jsOutput: "build/mario.js",
+      luaOutput: "build/mario.lua"
     })
   ]
 };

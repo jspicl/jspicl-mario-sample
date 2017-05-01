@@ -4,38 +4,35 @@ export {
   updatePhysics
 };
 
-function isTraversableHorizontal (actor, widthUnits, heightUnits) {
-  const flag = 1;
-  const left = Math.floor(actor.x / 8);
-  const top = Math.floor(actor.y / 8);
-  const bottom = top + heightUnits;
-  const right =  Math.floor((actor.x + 15.99) / 8);
-
-  return {
-    isCollidingLeft: fget(mget(left, top), flag) || fget(mget(left, bottom), flag),
-    isCollidingRight: fget(mget(right, top), flag) || fget(mget(right, bottom), flag)
-  };
+function roundToNearestCell(value) {
+  return Math.floor(value / 8);
 }
 
-function isTraversableVertical (actor, widthUnits, heightUnits) {
-  const flag = 0;
-  const left = Math.floor(actor.x / 8);
-  const top = Math.floor(actor.y / 8);
-  const bottom = top + heightUnits;
-  const right =  Math.floor((actor.x + 15.99) / 8);
+function isSolid(x, y) {
+  return fget(mget(roundToNearestCell(x), roundToNearestCell(y)), 0);
+}
+
+function isTraversable (x, y) {
+  const leftMarkerX = x;
+  const leftMarkerY = y + 4;
+  const rightMarkerX = x + 8;
+  const rightMarkerY = y + 4;
+  const topMarkerX = x + 4;
+  const topMarkerY = y;
+  const bottomMarkerX = x + 4;
+  const bottomMarkerY = y + 8;
 
   return {
-    isCollidingTop: fget(mget(left, top), flag) || fget(mget(right, top), flag),
-    isCollidingBottom: fget(mget(left, bottom), flag) || fget(mget(right, bottom), flag)
+    isCollidingLeft: isSolid(leftMarkerX, leftMarkerY),
+    isCollidingRight: isSolid(rightMarkerX, rightMarkerY),
+    isCollidingTop: isSolid(topMarkerX, topMarkerY),
+    isCollidingBottom: isSolid(bottomMarkerX, bottomMarkerY)
   };
 }
 
 function updatePhysics (actor, elapsedTime) {
   const proxy = Object.assign({}, actor);
-
   const direction = proxy.input.moveLeft && LEFT || proxy.input.moveRight && RIGHT || 0;
-  proxy.xVelocity = direction * proxy.moveVelocity;
-  proxy.yVelocity = Math.max(TERMINAL_VELOCITY, proxy.yVelocity - GRAVITY);
 
   if (direction !== 0) {
     proxy.direction = direction;
@@ -46,33 +43,40 @@ function updatePhysics (actor, elapsedTime) {
     proxy.jumpTime += elapsedTime;
   }
 
-  proxy.x += proxy.xVelocity;
-  proxy.y -= proxy.yVelocity;
+  let deltaX = direction * proxy.moveVelocity;
+  let deltaY = Math.max(TERMINAL_VELOCITY, proxy.yVelocity - GRAVITY);
 
-  const leftRightCollisionInfo = isTraversableHorizontal(proxy, actor.current.widthUnits, actor.current.heightUnits);
-  if (leftRightCollisionInfo.isCollidingLeft) {
-    proxy.x = (Math.floor(proxy.x / 8) + 1) * 8;
-    proxy.xVelocity = 0;
+  const collInfo = isTraversable(proxy.x + deltaX, proxy.y - deltaY);
+  if (collInfo.isCollidingLeft) {
+    proxy.x = (Math.floor((proxy.x + deltaX) / 8) + 1) * 8;
+//    proxy.xVelocity = 0;
+    deltaX = 0;
   }
 
-  if (leftRightCollisionInfo.isCollidingRight) {
-    proxy.x = Math.floor(proxy.x / 8) * 8;
-    proxy.xVelocity = 0;
+  if (collInfo.isCollidingRight) {
+    proxy.x = roundToNearestCell(proxy.x + deltaX) * 8;
+    deltaX = 0;
   }
 
-  const topBottomCollisionInfo = isTraversableVertical(proxy, actor.current.widthUnits, actor.current.heightUnits);
-  if (topBottomCollisionInfo.isCollidingTop) {
-    proxy.y = (Math.floor(proxy.y / 8) + 1) * 8;
+  if (collInfo.isCollidingTop && collInfo.isCollidingBottom === false) {
+    proxy.y = (roundToNearestCell(proxy.y - deltaY) + 1) * 8;
     proxy.yVelocity = 0;
     proxy.jumpTime = 0.2;
     proxy.input.jump = false;
+    deltaY = 0;
   }
 
-  if (topBottomCollisionInfo.isCollidingBottom) {
-    proxy.y = Math.floor(proxy.y / 8) * 8;
-    proxy.yVelocity = 0;
+  if (collInfo.isCollidingBottom) {
+    proxy.y = roundToNearestCell(proxy.y - deltaY) * 8;
     proxy.jumpTime = 0;
+    proxy.input.jump = false;
+    deltaY = 0;
   }
+
+  proxy.x += deltaX;
+  proxy.y -= deltaY;
+  proxy.yVelocity = deltaY;
+  proxy.xVelocity = deltaX;
 
   Object.assign(actor, proxy);
 }
