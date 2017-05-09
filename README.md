@@ -1,6 +1,8 @@
 # jspicl Sample project
 This is a sample project demonstrating how you can use [jspicl](https://github.com/AgronKabashi/jspicl) to build your PICO-8 games in Javascript.
 
+![](http://i.imgur.com/Bn8cq1A.gif)
+
 ## Installation
 ```
 git clone https://github.com/AgronKabashi/jspicl-mario-sample.git
