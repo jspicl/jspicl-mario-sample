@@ -8,11 +8,13 @@ function createActor({
   y = 0,
   health = 1000,
   direction = 0,
-  sprites,
   xVelocity = 0,
   yVelocity = 0,
-  moveVelocity = 0.687,
-  jumpVelocity = 2.41
+  sprites,
+  moveAcceleration,
+  moveVelocity,
+  jumpVelocity,
+  input
 }) {
   return {
     x,
@@ -27,8 +29,11 @@ function createActor({
 
     jumpTime: 0,
 
+    input,
+
     xVelocity,
     yVelocity,
+    moveAcceleration,
     moveVelocity,
     jumpVelocity
   };

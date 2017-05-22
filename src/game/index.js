@@ -21,7 +21,8 @@ function init () {
     top: 30,
     direction: RIGHT,
     sprites: SPRITES.mario,
-    moveVelocity: 1
+    moveVelocity: 0.7,
+    jumpVelocity: 2
   });
 
   actors.push(player);

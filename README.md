@@ -11,7 +11,7 @@ npm install
 ```
 
 ### First time setup
-You need to setup an output destination for the cartridge. This is done by modifying the `dest` property in `package.json` to point to your PICO-8 folder.
+You need to setup an output destination for the cartridge. This is done by modifying the `destFolder` property in `package.json` to point to your PICO-8 folder.
 
 ### Usage
 
