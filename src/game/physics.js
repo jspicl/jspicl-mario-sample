@@ -12,24 +12,6 @@ function isSolid(x, y) {
   return fget(mget(roundToNearestCell(x), roundToNearestCell(y)), 0);
 }
 
-function isTraversable (x, y) {
-  const leftMarkerX = x;
-  const leftMarkerY = y + 4;
-  const rightMarkerX = x + 8;
-  const rightMarkerY = y + 4;
-  const topMarkerX = x + 4;
-  const topMarkerY = y;
-  const bottomMarkerX = x + 4;
-  const bottomMarkerY = y + 8;
-
-  return {
-    isCollidingLeft: isSolid(leftMarkerX, leftMarkerY),
-    isCollidingRight: isSolid(rightMarkerX, rightMarkerY),
-    isCollidingTop: isSolid(topMarkerX, topMarkerY),
-    isCollidingBottom: isSolid(bottomMarkerX, bottomMarkerY)
-  };
-}
-
 function updatePhysics (actor, elapsedTime) {
   const proxy = Object.assign({}, actor);
   const direction = proxy.input.moveLeft && LEFT || proxy.input.moveRight && RIGHT || 0;
@@ -45,31 +27,38 @@ function updatePhysics (actor, elapsedTime) {
 
   let deltaX = direction * proxy.moveVelocity;
   let deltaY = Math.max(TERMINAL_VELOCITY, proxy.yVelocity - GRAVITY);
+  const x1 = proxy.x + deltaX;
+  const y1 = proxy.y - deltaY;
+  const xm = x1 + 4;
+  const ym = y1 + 4;
+  const x2 = x1 + 8;
+  const y2 = y1 + 8;
 
-  const collInfo = isTraversable(proxy.x + deltaX, proxy.y - deltaY);
-  if (collInfo.isCollidingLeft) {
-    proxy.x = (Math.floor((proxy.x + deltaX) / 8) + 1) * 8;
-//    proxy.xVelocity = 0;
+  // isColldingLeft
+  if (isSolid(x1, ym) && (isSolid(x1, y1) || isSolid(x1, y2))) {
+    proxy.x = (roundToNearestCell(x1) + 1) * 8;
     deltaX = 0;
   }
 
-  if (collInfo.isCollidingRight) {
-    proxy.x = roundToNearestCell(proxy.x + deltaX) * 8;
+  // isColldingRight
+  if (isSolid(x2, ym) && (isSolid(x2, y1) || isSolid(x2, y2))) {
+    proxy.x = roundToNearestCell(x1) * 8;
     deltaX = 0;
   }
 
-  if (collInfo.isCollidingTop && collInfo.isCollidingBottom === false) {
-    proxy.y = (roundToNearestCell(proxy.y - deltaY) + 1) * 8;
-    proxy.yVelocity = 0;
-    proxy.jumpTime = 0.2;
+  const isCollidingBottom = isSolid(xm, y2) && (isSolid(x1, y2) || isSolid(x2, y2));
+  if (isCollidingBottom) {
+    proxy.y = roundToNearestCell(y1) * 8;
+    proxy.jumpTime = 0;
     proxy.input.jump = false;
     deltaY = 0;
   }
 
-  if (collInfo.isCollidingBottom) {
-    proxy.y = roundToNearestCell(proxy.y - deltaY) * 8;
-    proxy.jumpTime = 0;
-    proxy.input.jump = false;
+  const isCollidingTop = isSolid(xm, y1) && (isSolid(x1, y1) || isSolid(x2, y1));
+  if (isCollidingTop && !isCollidingBottom) {
+    proxy.y = (roundToNearestCell(y1) + 1) * 8;
+    proxy.yVelocity = 0;
+    proxy.jumpTime = 0.2;
     deltaY = 0;
   }
 
