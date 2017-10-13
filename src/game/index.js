@@ -20,7 +20,7 @@ function init () {
     x: 40,
     top: 30,
     direction: RIGHT,
-    sprites: SPRITES.mario,
+    sprites: SPRITES.piranha,
     moveVelocity: 0.7,
     jumpVelocity: 2
   });
