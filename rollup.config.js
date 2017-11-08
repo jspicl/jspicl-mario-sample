@@ -2,12 +2,15 @@ import buble from "rollup-plugin-buble";
 import includePaths from "rollup-plugin-includepaths";
 import jspicl from "rollup-plugin-jspicl";
 
-const { config: { entry, destFolder, destName }} = require("./package.json");
+const { config: { input, destFolder, destName }} = require("./package.json");
+const bundlePath = `${destFolder}/${destName}`;
 
 export default {
-  entry,
-  dest: `${destFolder}/${destName}`,
-  format: "es",
+  input,
+  output: {
+    file: bundlePath,
+    format: "es"
+  },
   plugins: [
     includePaths({
       paths: ["src"]
@@ -19,6 +22,7 @@ export default {
       }
     },
     jspicl({
+      cartridgePath: bundlePath,
       jsOutput: "build/mario.js",
       luaOutput: "build/mario.lua"
     })
