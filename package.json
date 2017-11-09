@@ -17,11 +17,11 @@
     "cross-env": "^5.1.1",
     "eslint": "^4.10.0",
     "esprima": "^4.0.0",
-    "rollup": "^0.51.1",
+    "rollup": "^0.51.2",
     "rollup-plugin-babel": "^3.0.2",
     "rollup-plugin-buble": "^0.17.0",
     "rollup-plugin-includepaths": "^0.2.2",
-    "rollup-plugin-jspicl": "^4.0.0",
+    "rollup-plugin-jspicl": "^4.0.1",
     "rollup-plugin-node-resolve": "^3.0.0",
     "rollup-watch": "^4.3.1"
   },
