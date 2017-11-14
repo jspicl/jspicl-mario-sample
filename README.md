@@ -18,14 +18,16 @@ escape the backslashes in your path (`\\`).
 
 Run `npm start` to start building the game. This will generate the cartridge and keep watching the source files for any changes. If a cartridge already exists then it will be parsed and everything, sans lua code, will be reused and included in the newly build cartridge.
 
-In PICO-8 you run the `load` command followed by `run` to execute your cartridge. You need to run `load` everytime you modify your source code to ensure that PICO-8 has the newest code in memory.
+In PICO-8 you run the `load` command followed by `run` to execute your cartridge.
 ```
 load mario-sample
 run
 ```
 
+In order for PICO-8 to detect your code changes you need to reload the cart by pressing `CTRL+R` or `CMD+R` depending on your system.
+
 ### Other
-In order to "factory-reset" your cartridge to the initial version you can run:
+To "factory-reset" your cartridge to the initial version you can run:
 ```
 npm run restore-cart
 ```
