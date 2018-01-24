@@ -1,11 +1,10 @@
-export {
-  getInput
-};
-
-function getInput () {
+export function getInput () {
   return {
-    moveLeft: btn(0, 0),
-    moveRight: btn(1, 0),
-    jump: btn(4, 0)
+    leftPressed: btn(0, 0),
+    rightPressed: btn(1, 0),
+    upPressed: btn(2, 0),
+    downPressed: btn(3, 0),
+    jumpPressed: btn(4, 0),
+    shootPressed: btn(5, 0)
   };
 }

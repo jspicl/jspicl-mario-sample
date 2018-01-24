@@ -1,7 +1,7 @@
 # jspicl Sample project
-This is a sample project demonstrating how you can use [jspicl](https://github.com/AgronKabashi/jspicl) to build your PICO-8 games in Javascript.
+This is a sample project demonstrating how you can use [jspicl](https://github.com/AgronKabashi/jspicl) to write your PICO-8 games in Javascript.
 
-![](http://i.imgur.com/Bn8cq1A.gif)
+![](https://i.imgur.com/b3rAt6t.gif)
 
 ## Installation
 ```
@@ -10,27 +10,21 @@ cd jspicl-mario-sample
 npm install
 ```
 
-### First time setup
-You need to setup an output destination for the cartridge. This is done by modifying the `destFolder` property in `package.json` to point to your PICO-8 folder. If you're on Windows then don't forget to
-escape the backslashes in your path (`\\`).
-
 ### Usage
 
-Run `npm start` to start building the game. This will generate the cartridge and keep watching the source files for any changes. If a cartridge already exists then it will be parsed and everything, sans lua code, will be reused and included in the newly build cartridge.
+Running `npm start` will compile your game into a .p8 cartridge and auto launch the game in PICO-8. Any modifications to the source code will regenerate the cartridge and live-reload the game for you (NOTE: live-reloading currently only works in MacOS. For other systems, press Ctrl+R in PICO-8 to reload manually).
 
-In PICO-8 you run the `load` command followed by `run` to execute your cartridge.
-```
-load mario-sample
-run
-```
+If a cartridge already exists in the build folder then it will be parsed and all of the assets, sans lua code, will be reused and included in the newly build cartridge.
 
-In order for PICO-8 to detect your code changes you need to reload the cart by pressing `CTRL+R` or `CMD+R` depending on your system.
+For more advanced build options, please look at [rollup-plugin-jspicl](https://github.com/AgronKabashi/rollup-plugin-jspicl)'s options and modify rollup.config.js accordingly.
 
-### Other
-To "factory-reset" your cartridge to the initial version you can run:
+### Resetting
+To restore your cartridge to the initial, included version you can run:
 ```
 npm run restore-cart
 ```
+
+This will take the game.p8 cartridge and put it in the build directory for you.
 
 CAUTION: This will overwrite any existing cartridge in the destination folder so make sure you do a backup first.
 

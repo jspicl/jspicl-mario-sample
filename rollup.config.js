@@ -2,14 +2,14 @@ import buble from "rollup-plugin-buble";
 import includePaths from "rollup-plugin-includepaths";
 import jspicl from "rollup-plugin-jspicl";
 
-const { config: { input, destFolder, destName }} = require("./package.json");
-const bundlePath = `${destFolder}/${destName}`;
+const bundlePath = "build/game.p8";
 
 export default {
-  input,
+  input: "src/index.js",
   output: {
     file: bundlePath,
-    format: "es"
+    format: "es",
+    freeze: false
   },
   plugins: [
     includePaths({
@@ -17,14 +17,12 @@ export default {
     }),
     buble(),
     {
-      transformBundle: function (source) {
-        return source.replace(/\/\/ <!-- DEBUG[^\/\/]*\/\/\s-->/g, "");
-      }
+      transformBundle: source => source.replace(/\/\/ <!-- DEBUG[^\/\/]*\/\/\s-->/g, "")
     },
     jspicl({
       cartridgePath: bundlePath,
-      jsOutput: "build/mario.js",
-      luaOutput: "build/mario.lua"
+      jsOutput: "build/game.js",
+      luaOutput: "build/game.lua"
     })
   ]
 };

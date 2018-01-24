@@ -1,19 +1,26 @@
 let logHistory = [];
+let renderQueue = [];
 
-export {
-  clearLog,
-  getLog,
-  log
-};
-
-function clearLog () {
+export function clearLog () {
   logHistory = [];
 }
 
-function getLog () {
+export function getLog () {
   return logHistory.join("\n");
 }
 
-function log (string) {
+export function log (string) {
   logHistory.push(string);
+}
+
+export function clearDebugRender () {
+  renderQueue = [];
+}
+
+export function getDebugRender () {
+  return renderQueue;
+}
+
+export function debugRender(callback) {
+  renderQueue.push(callback);
 }

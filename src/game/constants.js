@@ -1,6 +1,5 @@
-export const LEFT = -1;
-export const RIGHT = 1;
-export const FPS = 60;
-export const FIXED_DELTA_TIME = 1 / FPS;
-export const TERMINAL_VELOCITY = /*-6.8*/ -2.4;
-export const GRAVITY = /*0.242*/ 0.1;
+export const DIRECTION_LEFT = -1;
+export const DIRECTION_RIGHT = 1;
+export const TERMINAL_VELOCITY = -3.4;
+export const GRAVITY = 0.2;
+export const CELL_SIZE = 8;

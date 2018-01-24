@@ -1,54 +1,78 @@
-import { getInput } from "./input";
-import { updatePhysics } from "./physics";
+import { checkForCollisions } from "./physics";
 import { updateAnimation } from "./animation";
 import { createActor } from "./factories";
-import { RIGHT } from "./constants";
-import { clearLog } from "./debug";
+import { CELL_SIZE, DIRECTION_RIGHT } from "./constants";
+import { roundToNearestCell } from "./utils";
+import { clearLog, clearDebugRender, getDebugRender } from "./debug";
 import * as SPRITES from "./sprites";
+import * as STATES from "./states";
 
-export {
-  init,
-  update,
-  draw
-};
-
-let actors = [];
+const actors = [];
 let player;
 
-function init () {
+export function init () {
   player = createActor({
+    type: "player",
     x: 40,
     top: 30,
-    direction: RIGHT,
+    direction: DIRECTION_RIGHT,
     sprites: SPRITES.mario,
-    moveVelocity: 0.7,
+    moveVelocity: 0.9,
     jumpVelocity: 2
   });
 
   actors.push(player);
 }
 
-function update (elapsedTime) {
+function handleState (actor, elapsedTime) {
+  STATES[actor.type](actor, elapsedTime);
+}
+
+export function update (elapsedTime) {
   clearLog();
-  player.input = getInput();
+  clearDebugRender();
 
   actors.forEach(actor => {
-    updatePhysics(actor, elapsedTime);
+    handleState(actor, elapsedTime);
+    checkForCollisions(actor, elapsedTime);
     updateAnimation(actor, elapsedTime);
   });
 }
 
-function draw () {
+function renderActor (actor) {
+  const sprite = actor.current;
+
+  sspr(
+    (sprite.index + Math.floor(actor.cursor) * sprite.widthUnits) % 16 * CELL_SIZE,
+    Math.floor(sprite.index / 16) * CELL_SIZE,
+    sprite.widthUnits * CELL_SIZE,
+    sprite.heightUnits * CELL_SIZE,
+    actor.x,
+    actor.y,
+    actor.scale * sprite.widthUnits * CELL_SIZE,
+    actor.scale * sprite.heightUnits * CELL_SIZE,
+    actor.direction === DIRECTION_RIGHT);
+}
+
+export function draw () {
   const cameraX = player.x - 60;
   const cameraY = player.y - 60;
 
-  rectfill(cameraX - 1, cameraY - 1, cameraX + 129, cameraY + 129, 0);
+  cls();
   camera(cameraX, cameraY);
 
-  map(Math.floor(cameraX / 8), Math.floor(cameraY / 8), Math.floor(cameraX / 8) * 8, Math.floor(cameraY / 8) * 8, 17, 17);
+  // Draw the proper map region
+  const xCell = roundToNearestCell(cameraX);
+  const yCell = roundToNearestCell(cameraY);
+  map(
+    xCell,
+    yCell,
+    xCell * CELL_SIZE,
+    yCell * CELL_SIZE,
+    17, 17);
 
-  actors.forEach(actor => {
-    const sprite = actor.current;
-    spr(sprite.index + Math.floor(actor.cursor) * sprite.widthUnits, actor.x, actor.y, sprite.widthUnits, sprite.heightUnits, actor.direction === RIGHT);
-  });
+  // Render players and enemies
+  actors.forEach(renderActor);
+
+  getDebugRender().map(c => c());
 }

@@ -1,65 +1,60 @@
-import { LEFT, RIGHT, TERMINAL_VELOCITY, GRAVITY } from "./constants";
+import { CELL_SIZE, GRAVITY, TERMINAL_VELOCITY } from "./constants";
+import { roundToNearestCell } from "./utils";
 
-export {
-  updatePhysics
-};
-
-function roundToNearestCell(value) {
-  return Math.floor(value / 8);
-}
-
-function isSolid(x, y) {
+function isSolid (x, y) {
   return fget(mget(roundToNearestCell(x), roundToNearestCell(y)), 0);
 }
 
-function updatePhysics (actor, elapsedTime) {
+export function checkForCollisions (actor) {
   const proxy = Object.assign({}, actor);
-  const direction = proxy.input.moveLeft && LEFT || proxy.input.moveRight && RIGHT || 0;
+  const width = proxy.current.widthUnits * CELL_SIZE;
+  const height = proxy.current.heightUnits * CELL_SIZE;
+  const { x, y } = proxy;
 
-  if (direction !== 0) {
-    proxy.direction = direction;
-  }
+  let deltaX = proxy.xVelocity * proxy.direction;
+  let deltaY = Math.max(TERMINAL_VELOCITY, proxy.yVelocity - GRAVITY * proxy.gravityModifier);
+  const x1 = x + deltaX;
+  const x2 = x1 + width;
+  const y1 = y - deltaY - 1;
+  const y2 = y1 + height + 1;
+  const topBottomMarkerX1 = x1 + width / 4 + 1;
+  const topBottomMarkerX2 = x2 - width / 4 - 1;
+  const sideMarkerY1 = y1 + height / 4 + 1;
+  const sideMarkerY2 = y2 - height / 4 - 1;
 
-  if (proxy.input.jump && proxy.jumpTime < 0.2) {
-    proxy.yVelocity = proxy.jumpVelocity;
-    proxy.jumpTime += elapsedTime;
-  }
-
-  let deltaX = direction * proxy.moveVelocity;
-  let deltaY = Math.max(TERMINAL_VELOCITY, proxy.yVelocity - GRAVITY);
-  const x1 = proxy.x + deltaX;
-  const y1 = proxy.y - deltaY;
-  const xm = x1 + 4;
-  const ym = y1 + 4;
-  const x2 = x1 + 8;
-  const y2 = y1 + 8;
-
-  // isColldingLeft
-  if (isSolid(x1, ym) && (isSolid(x1, y1) || isSolid(x1, y2))) {
-    proxy.x = (roundToNearestCell(x1) + 1) * 8;
+  const isCollidingLeft = isSolid(x1, sideMarkerY1) || isSolid(x1, sideMarkerY2);
+  if (isCollidingLeft) {
     deltaX = 0;
+    const distance = (roundToNearestCell(x1) + 1) * CELL_SIZE - proxy.x;
+    proxy.x = x + Math.min(0.5, distance);
   }
 
-  // isColldingRight
-  if (isSolid(x2, ym) && (isSolid(x2, y1) || isSolid(x2, y2))) {
-    proxy.x = roundToNearestCell(x1) * 8;
+  const isCollidingRight = isSolid(x2, sideMarkerY1) || isSolid(x2, sideMarkerY2);
+  if (isCollidingRight) {
     deltaX = 0;
+    const distance = x - (roundToNearestCell(x2) - 1) * CELL_SIZE;
+    proxy.x = x - Math.min(0.5, distance);
   }
 
-  const isCollidingBottom = isSolid(xm, y2) && (isSolid(x1, y2) || isSolid(x2, y2));
+  const isCollidingTop = isSolid(topBottomMarkerX1, y1) || isSolid(topBottomMarkerX2, y1);
+  if (isCollidingTop) {
+    deltaY = -0.5;
+    proxy.jumpDuration = 1000;
+    const distance = (roundToNearestCell(y1) + 1) * CELL_SIZE - y;
+    proxy.y = y + Math.min(0.5, distance);
+  }
+
+  const isCollidingBottom = isSolid(topBottomMarkerX1, y2) || isSolid(topBottomMarkerX2, y2);
   if (isCollidingBottom) {
-    proxy.y = roundToNearestCell(y1) * 8;
-    proxy.jumpTime = 0;
-    proxy.input.jump = false;
     deltaY = 0;
+    const distance = y - roundToNearestCell(y1 + 2) * CELL_SIZE;
+    proxy.y = y - Math.min(0.5, distance);
+    proxy.jumpDuration = 0;
+    proxy.hasJumped = actor.input.jumpPressed;
+    proxy.airDuration = 0;
   }
-
-  const isCollidingTop = isSolid(xm, y1) && (isSolid(x1, y1) || isSolid(x2, y1));
-  if (isCollidingTop && !isCollidingBottom) {
-    proxy.y = (roundToNearestCell(y1) + 1) * 8;
-    proxy.yVelocity = 0;
-    proxy.jumpTime = 0.2;
-    deltaY = 0;
+  else {
+    proxy.airDuration = proxy.airDuration + 1;
   }
 
   proxy.x += deltaX;
