@@ -9,6 +9,8 @@ npm start
 ```
 This will create a cartridge and automatically launch it in PICO-8. Whenever source files are changed, a rebuild will take place and reload PICO-8 with the new cartridge for you.
 
+![](https://i.imgur.com/QYj4Xga.gif)
+
 If a cartridge already exists in the build folder then all the assets, sans lua code, will be reused and included in the newly build cartridge.
 
 For more advanced build options, please look at [rollup-plugin-jspicl](https://github.com/AgronKabashi/rollup-plugin-jspicl)'s options and modify rollup.config.js accordingly.
