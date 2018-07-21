@@ -38,6 +38,9 @@ export const player = (actor, elapsedTime) => {
     actor.current = actor.sprites.default;
   }
 
+  // ensure we have sprites
+  actor.current = actor.current || actor.sprites.default;
+
   if (actor.current !== current) {
     actor.cursor = 0;
   }

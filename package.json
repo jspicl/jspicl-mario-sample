@@ -4,7 +4,7 @@
   "repository": {
     "url": "https://github.com/AgronKabashi/rollup-plugin-jspicl"
   },
-  "description": "A simple Mario sample game using jspicl to transpile Javascript",
+  "description": "A sample project demonstrating how to build PICO-8 games with JavaScript.",
   "scripts": {
     "restore-cart": "cross-env copyfiles game.p8 build",
     "prebuild": "npm run restore-cart -- -s",
@@ -12,21 +12,24 @@
     "lint": "eslint src",
     "start": "npm run build -- -w"
   },
+  "eslintIgnore": [
+    "build"
+  ],
   "author": "Agron Kabashi",
   "license": "MIT",
   "devDependencies": {
     "@agronkabashi/eslint-config": "^1.0.2",
-    "babel-core": "^6.26.0",
-    "babel-eslint": "^8.2.3",
+    "babel-core": "^6.26.3",
+    "babel-eslint": "^8.2.6",
     "copyfiles": "^2.0.0",
-    "cross-env": "^5.1.4",
-    "eslint": "^4.19.1",
-    "esprima": "^4.0.0",
-    "rollup": "^0.57.1",
-    "rollup-plugin-babel": "^3.0.3",
+    "cross-env": "^5.2.0",
+    "eslint": "^5.2.0",
+    "esprima": "^4.0.1",
+    "rollup": "^0.63.4",
+    "rollup-plugin-babel": "^3.0.7",
     "rollup-plugin-buble": "^0.19.2",
-    "rollup-plugin-includepaths": "^0.2.2",
-    "rollup-plugin-jspicl": "^4.5.0",
+    "rollup-plugin-includepaths": "^0.2.3",
+    "rollup-plugin-jspicl": "^4.7.0",
     "rollup-plugin-node-resolve": "^3.3.0",
     "rollup-watch": "^4.3.1"
   }
