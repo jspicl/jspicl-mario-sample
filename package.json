@@ -9,7 +9,6 @@
     "restore-cart": "cross-env copyfiles game.p8 build",
     "prebuild": "npm run restore-cart -- -s",
     "build": "rollup -c",
-    "lint": "eslint src",
     "start": "npm run build -- -w"
   },
   "eslintIgnore": [

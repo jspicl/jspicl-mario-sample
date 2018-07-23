@@ -55,8 +55,8 @@ function renderActor (actor) {
 }
 
 export function draw () {
-  const cameraX = player.x - 60;
-  const cameraY = player.y - 60;
+  const cameraX = player.x - 56;
+  const cameraY = player.y - 56;
 
   cls();
   camera(cameraX, cameraY);

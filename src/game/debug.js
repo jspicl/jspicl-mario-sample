@@ -21,6 +21,6 @@ export function getDebugRender () {
   return renderQueue;
 }
 
-export function debugRender(callback) {
+export function debugRender (callback) {
   renderQueue.push(callback);
 }
