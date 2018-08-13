@@ -17,10 +17,11 @@ export default {
     }),
     buble(),
     {
-      transformBundle: source => source.replace(/\/\/ <!-- DEBUG[^\/\/]*\/\/\s-->/g, "")
+      transformBundle: source => source.replace(/\/\/ <!-- DEBUG[^//]*\/\/\s-->/g, "")
     },
     jspicl({
       cartridgePath: bundlePath,
+      spritesheetImagePath: "spritesheet.png",
       jsOutput: "build/game.js",
       luaOutput: "build/game.lua"
     })
