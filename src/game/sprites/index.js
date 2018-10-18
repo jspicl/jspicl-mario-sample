@@ -1,4 +1,5 @@
-export * from "./bulletbill";
+export * from "./buzzyBeetle";
+export * from "./bulletBill";
 export * from "./goomba";
 export * from "./koopa";
 export * from "./mario";
