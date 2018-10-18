@@ -1,5 +1,5 @@
 import { createKeyframeAnimation } from "../factories";
 
-export const bulletbill = {
+export const bulletBill = {
   default: createKeyframeAnimation(25, 1, 1, 1, 1)
 };
