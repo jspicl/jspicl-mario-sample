@@ -1,46 +1,45 @@
-import { checkForCollisions } from "./physics";
-import { updateAnimation } from "./animation";
 import { createActor } from "./factories";
-import { CELL_SIZE, DIRECTION_RIGHT } from "./constants";
+import { CELL_SIZE, DIRECTION_RIGHT, DIRECTION_LEFT } from "./constants";
 import { roundToNearestCell } from "./utils";
-import { clearLog, clearDebugRender, getDebugRender } from "./debug";
 import * as SPRITES from "./sprites";
 import * as STATES from "./states";
+import { clearLog, clearDebugRender } from "./debug";
 
 const actors = [];
 let player;
 
 export function init () {
   player = createActor({
-    type: "player",
+    updateState: STATES.player,
     x: 40,
-    top: 30,
+    y: 30,
     direction: DIRECTION_RIGHT,
     sprites: SPRITES.mario,
-    moveVelocity: 0.9,
-    jumpVelocity: 2
+    moveVelocity: 0.85,
+    jumpVelocity: 1.9
   });
 
-  actors.push(player);
-}
+  actors.push(createActor({
+    updateState: STATES.simpleEnemy,
+    sprites: SPRITES.goomba,
+    direction: DIRECTION_LEFT,
+    x: 120,
+    moveVelocity: 0.28
+  }));
 
-function handleState (actor, elapsedTime) {
-  STATES[actor.type](actor, elapsedTime);
+  actors.push(player);
 }
 
 export function update (elapsedTime) {
   clearLog();
   clearDebugRender();
-
   actors.forEach(actor => {
-    handleState(actor, elapsedTime);
-    checkForCollisions(actor, elapsedTime);
-    updateAnimation(actor, elapsedTime);
+    actor.updateState(actor, elapsedTime);
   });
 }
 
 function renderActor (actor) {
-  const sprite = actor.current;
+  const sprite = actor.currentAnimation;
 
   sspr(
     (sprite.index + Math.floor(actor.cursor) * sprite.widthUnits) % 16 * CELL_SIZE,
@@ -54,9 +53,11 @@ function renderActor (actor) {
     actor.direction === DIRECTION_RIGHT);
 }
 
+let cameraX = 0;
+
 export function draw () {
-  const cameraX = player.x - 56;
-  const cameraY = player.y - 56;
+  cameraX = Math.max(player.x - 60, cameraX);
+  const cameraY = 0;
 
   cls();
   camera(cameraX, cameraY);
@@ -73,6 +74,4 @@ export function draw () {
 
   // Render players and enemies
   actors.forEach(renderActor);
-
-  getDebugRender().map(c => c());
 }

@@ -14,7 +14,8 @@ export function createActor (args) {
     cursor: 0,
     gravityModifier: 1,
     scale: 1,
-    current: args.sprites.default
+    currentAnimation: args.sprites.default,
+    collisionInfo: {}
   }, args);
 }
 

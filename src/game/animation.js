@@ -1,5 +1,5 @@
 export function updateAnimation (actor, elapsedTime) {
-  actor.current = actor.current || actor.sprites.default;
+  actor.currentAnimation = actor.currentAnimation || actor.sprites.default;
 
-  actor.cursor = (actor.cursor + elapsedTime / actor.current.duration) % actor.current.frames;
+  actor.cursor = (actor.cursor + elapsedTime / actor.currentAnimation.duration) % actor.currentAnimation.frames;
 }
