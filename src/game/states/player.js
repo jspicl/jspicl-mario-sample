@@ -1,8 +1,7 @@
-import { DIRECTION_LEFT, DIRECTION_RIGHT } from "../constants";
+import { DIRECTION_LEFT, DIRECTION_RIGHT, MAX_AIRJUMP_DURATION, MAX_JUMP_DURATION } from "../constants";
 import { getInput } from "../input";
 import { updateAnimation } from "../animation";
 import { checkForCollisionsAgainstEnvironment, updatePositionBasedOnMotion } from "../physics";
-import { roundToNearestCell } from "../utils";
 
 export function player (actor, elapsedTime) {
   // 1. Collect input
@@ -42,13 +41,13 @@ export function player (actor, elapsedTime) {
 }
 
 function updatePlayerMotion (actor) {
-  if (!actor.hasJumped && actor.input.jumpPressed && actor.jumpDuration < 13) {
+  if (!actor.hasJumped && actor.input.jumpPressed && actor.jumpDuration < MAX_JUMP_DURATION) {
     actor.yVelocity = actor.jumpVelocity;
     actor.jumpDuration = actor.jumpDuration + 1;
   }
 
   // Disable jumping if the player has been airborne for a certain amount of time
-  if (!actor.input.jumpPressed && actor.airDuration > 0 && actor.airDuration > 6) {
+  if (!actor.input.jumpPressed && actor.airDuration > 0 && actor.airDuration > MAX_AIRJUMP_DURATION) {
     actor.hasJumped = true;
   }
 
