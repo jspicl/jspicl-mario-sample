@@ -1,30 +1,41 @@
+import { TERMINAL_VELOCITY, CELL_SIZE, DIRECTION_RIGHT } from "./constants";
+
+let counter = 0;
+function generateUniqueId () {
+  counter = (counter + 1) % 100;
+  return counter;
+}
+
 export function createActor (args) {
   return Object.assign({
+    id: generateUniqueId(),
     x: 0,
     y: 0,
-    health: 10,
-    direction: 0,
+    health: 1,
+    type: "enemy",
+    direction: DIRECTION_RIGHT,
+    facingDirection: DIRECTION_RIGHT,
+    targetXVelocity: 0,
+    targetYVelocity: TERMINAL_VELOCITY,
     xVelocity: 0,
     yVelocity: 0,
-    moveAcceleration: 0,
-    moveVelocity: 0,
-    jumpVelocity: 0,
     jumpDuration: 0,
-    airDuration: 0,
-    cursor: 0,
-    gravityModifier: 1,
-    scale: 1,
-    currentAnimation: args.sprites.default,
-    collisionInfo: {}
+    acceleration: 2,
+    maxMoveVelocity: 14,
+    maxSprintVelocity: 72,
+    currentAnimationFrame: 0,
+    currentAnimation: args.sprites.default
   }, args);
 }
 
-export function createKeyframeAnimation (index, frames = 1, duration = 1, widthUnits = 1, heightUnits = 1) {
+export function createKeyframeAnimation (index, frames = 1, duration = 1000, widthCells = 1, heightCells = 1) {
   return {
     index,
     frames,
     duration,
-    widthUnits,
-    heightUnits
+    widthCells,
+    heightCells,
+    width: widthCells * CELL_SIZE,
+    height: heightCells * CELL_SIZE
   };
 }

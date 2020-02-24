@@ -1,19 +1,20 @@
-import { DIRECTION_LEFT } from "../constants";
-import { updatePositionBasedOnMotion, checkForCollisionsAgainstEnvironment } from "../physics";
+import { DIRECTION_LEFT, DIRECTION_RIGHT } from "../constants";
+import { checkForCollisionsAgainstEnvironment } from "../physics";
+import { updatePositionBasedOnMotion } from "../utils";
 import { updateAnimation } from "../animation";
 
-export function simpleEnemy (actor, elapsedTime) {
+export function simpleEnemy (actor, actors, elapsedTime) {
   // 1. Collect input
 
   // 2. Update motion based on input
-  actor.xVelocity = actor.moveVelocity;
   actor.direction = actor.direction || DIRECTION_LEFT;
+  actor.targetXVelocity = actor.maxMoveVelocity * actor.direction;
 
   // 3. Update position based on motion
-  updatePositionBasedOnMotion(actor);
+  updatePositionBasedOnMotion(actor, elapsedTime);
 
   // 4. Collision detect & correct
-  const collisionInfo = checkForCollisionsAgainstEnvironment(actor);
+  const collisionInfo = checkForCollisionsAgainstEnvironment(actor, elapsedTime);
 
   // 5. Respond to collision events
   if (collisionInfo.ground) {
@@ -21,9 +22,13 @@ export function simpleEnemy (actor, elapsedTime) {
   }
 
   if (collisionInfo.left || collisionInfo.right) {
-    actor.direction = actor.direction * -1;
+    actor.xVelocity = 0;
+    actor.targetXVelocity = 0;
+    actor.direction = collisionInfo.right ? DIRECTION_LEFT : DIRECTION_RIGHT;
     actor.cursor = 0;
   }
+
+  actor.facingDirection = actor.direction;
 
   // 6. Update animation
   let animation = actor.sprites.default;

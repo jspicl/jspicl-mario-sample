@@ -1,35 +1,42 @@
 import { DIRECTION_LEFT, DIRECTION_RIGHT, MAX_AIRJUMP_DURATION, MAX_JUMP_DURATION } from "../constants";
 import { getInput } from "../input";
 import { updateAnimation } from "../animation";
-import { checkForCollisionsAgainstEnvironment, updatePositionBasedOnMotion } from "../physics";
+import { checkForCollisionsAgainstEnvironment } from "../physics";
+import { updatePositionBasedOnMotion } from "../utils";
 
-export function player (actor, elapsedTime) {
+export function player (actor, actors, elapsedTime) {
   // 1. Collect input
   actor.input = getInput();
 
   // 2. Update motion based on input
-  updatePlayerMotion(actor);
+  updatePlayerMotion(actor, elapsedTime);
 
   // 3. Update position based on motion
-  updatePositionBasedOnMotion(actor);
+  updatePositionBasedOnMotion(actor, elapsedTime);
 
   // 4. Collision detect & correct
-  const collisionInfo = checkForCollisionsAgainstEnvironment(actor);
+  const collisionInfo = checkForCollisionsAgainstEnvironment(actor, elapsedTime);
 
   // 5. Respond to collision events
+  if (collisionInfo.left || collisionInfo.right) {
+    actor.xVelocity = 0;
+    actor.targetXVelocity = 0;
+  }
+
   if (collisionInfo.ground) {
     actor.jumpDuration = 0;
     actor.yVelocity = 0;
     actor.hasJumped = actor.input.jumpPressed;
-    actor.airDuration = 0;
+    actor.airBorne = false;
   }
   else {
-    actor.airDuration = actor.airDuration + 1;
+    actor.jumpDuration = actor.jumpDuration + elapsedTime;
+    actor.airBorne = true;
   }
 
   if (collisionInfo.top) {
     actor.jumpDuration = 1000;
-    actor.yVelocity = -0.1;
+    actor.yVelocity = -1;
 
     // if (collisionInfo.top.type === 33) {
     //   mset(collisionInfo.top.mapX, collisionInfo.top.mapY, 0);
@@ -40,44 +47,44 @@ export function player (actor, elapsedTime) {
   updatePlayerAnimation(actor, elapsedTime);
 }
 
-function updatePlayerMotion (actor) {
+function updatePlayerMotion (actor, elapsedTime) {
   if (!actor.hasJumped && actor.input.jumpPressed && actor.jumpDuration < MAX_JUMP_DURATION) {
-    actor.yVelocity = actor.jumpVelocity;
-    actor.jumpDuration = actor.jumpDuration + 1;
+    actor.yVelocity = -100;
+    actor.jumpDuration += elapsedTime;
   }
 
   // Disable jumping if the player has been airborne for a certain amount of time
-  if (!actor.input.jumpPressed && actor.airDuration > 0 && actor.airDuration > MAX_AIRJUMP_DURATION) {
+  if (!actor.input.jumpPressed && actor.jumpDuration > MAX_AIRJUMP_DURATION) {
     actor.hasJumped = true;
   }
 
   if (actor.input.leftPressed || actor.input.rightPressed) {
-    actor.xVelocity = actor.moveVelocity;
+    actor.direction = actor.input.leftPressed && DIRECTION_LEFT || actor.input.rightPressed && DIRECTION_RIGHT;
+    actor.facingDirection = actor.airBorne && actor.facingDirection || actor.direction;
+    actor.targetXVelocity = actor.direction * actor.maxMoveVelocity;
     if (actor.input.shootPressed) {
-      actor.xVelocity *= 1.5;
+      actor.targetXVelocity = actor.direction * actor.maxSprintVelocity;
     }
   }
   else {
-    actor.xVelocity = 0;
+    actor.targetXVelocity = 0;
   }
-
-  actor.direction = actor.input.leftPressed && DIRECTION_LEFT || actor.input.rightPressed && DIRECTION_RIGHT || actor.direction;
 }
 
 function updatePlayerAnimation (actor, elapsedTime) {
   let animation = actor.sprites.default;
-  if (actor.yVelocity !== 0) {
+  if (actor.airBorne) {
     animation = actor.sprites.jump;
   }
   else if (actor.xVelocity !== 0) {
     animation = actor.sprites.run;
   }
-  else if (actor.xVelocity === 0) {
+  else {
     animation = actor.sprites.default;
   }
 
   if (actor.currentAnimation !== animation) {
-    actor.cursor = 0;
+    actor.currentAnimationFrame = 0;
   }
 
   actor.currentAnimation = animation;

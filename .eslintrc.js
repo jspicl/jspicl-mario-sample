@@ -7,6 +7,9 @@ module.exports = {
   parserOptions: {
     sourceType: "module"
   },
+  rules: {
+    "no-magic-numbers": 0
+  },
   globals: {
     // PICO 8 stuff
     btn: true,
