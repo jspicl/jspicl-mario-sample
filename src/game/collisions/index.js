@@ -1,2 +1,3 @@
+export * from "./cameraVsEnemy";
 export * from "./enemyVsEnemy";
-export * from "./playerVsEnemy";
+export * from "./enemyVsPlayer";

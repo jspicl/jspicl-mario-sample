@@ -1,6 +1,6 @@
 import { CELL_SIZE } from "./constants";
 import { roundToNearestCell, lerp } from "./utils";
-import { playerVsEnemy, enemyVsEnemy } from "./collisions";
+import { cameraVsEnemy, enemyVsPlayer, enemyVsEnemy } from "./collisions";
 
 function isSolid (x, y) {
   return fget(mget(x, y), 0);
@@ -9,17 +9,20 @@ function isSolid (x, y) {
 function isPlatform (x, y) {
   return fget(mget(x, y), 1);
 }
+
 const collisionAction = {
-  playerenemy: playerVsEnemy,
-  enemyenemy: enemyVsEnemy
+  enemyVsPlayer,
+  enemyVsEnemy,
+  cameraVsEnemy
 };
 
 export function checkForCollisionsAgainstActors (actors) {
   const collisionMap = {};
+
   actors.forEach(actor => {
     actors.forEach(target => {
       const id = Math.min(actor.id, target.id) * 1000 + Math.max(actor.id, target.id);
-      if (actor.dead || target.dead || actor === target || collisionMap[id]) {
+      if (!actor.collidable || !target.collidable || actor === target || collisionMap[id]) {
         return;
       }
 
@@ -30,12 +33,11 @@ export function checkForCollisionsAgainstActors (actors) {
         && actor.x + actor.currentAnimation.width - 1 > target.x + 1
         && actor.y + 1 < target.y + target.currentAnimation.height - 1
         && actor.y + actor.currentAnimation.height - 1 > target.y + 1) {
-        let type = "enemyenemy";
-        if (actor.type === "player" || target.type === "player") {
-          type = "playerenemy";
+        const type = [actor.type, target.type].sort().join("vs");
+        const colliderAction = collisionAction[type];
+        if (colliderAction) {
+          colliderAction(actor, target);
         }
-
-        collisionAction[type](actor, target);
       }
     });
   });

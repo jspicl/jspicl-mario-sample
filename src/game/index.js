@@ -7,14 +7,25 @@ import * as STATES from "./states";
 
 let actors = [];
 let player;
-let cameraX = 0;
-const cameraY = 0;
+let camera;
 
 function reset () {
-  cameraX = 0;
   actors = [];
+  camera = createActor({
+    type: "camera",
+    updateState: STATES.camera,
+    allowRendering: false,
+    sprites: {
+      default: {
+        width: 128,
+        height: 128
+      }
+    }
+  });
+
   player = createActor({
     type: "player",
+    allowRendering: true,
     updateState: STATES.player,
     x: 10,
     y: 30,
@@ -33,7 +44,8 @@ function reset () {
 
   actors.push(createActor({
     updateState: STATES.simpleEnemy,
-    x: 70,
+    allowUpdating: false,
+    x: 170,
     y: 30,
     direction: DIRECTION_LEFT,
     sprites: SPRITES.goomba
@@ -43,8 +55,9 @@ function reset () {
     updateState: STATES.simpleEnemy,
     x: 80,
     y: 30,
+    health: 2,
     direction: DIRECTION_LEFT,
-    sprites: SPRITES.goomba
+    sprites: SPRITES.koopa
   }));
 
   // actors.push(createActor({
@@ -55,6 +68,10 @@ function reset () {
   // }));
 
   actors.push(player);
+  actors.push(camera);
+
+  actors.camera = camera;
+  actors.player = player;
 }
 
 export function init () {
@@ -76,11 +93,15 @@ export function update (elapsedTime) {
 }
 
 function renderActor (actor) {
-  const { currentAnimation } = actor;
+  const { currentAnimation, allowRendering } = actor;
+
+  if (!allowRendering) {
+    return;
+  }
 
   spr(
     currentAnimation.index + actor.currentAnimationFrame,
-    actor.x - cameraX,
+    actor.x - camera.x,
     actor.y - currentAnimation.height,
     currentAnimation.widthCells,
     currentAnimation.heightCells,
@@ -88,11 +109,10 @@ function renderActor (actor) {
 }
 
 export function draw () {
-  cameraX = Math.max(player.x - 60, cameraX);
-
   // cls();
-  renderMap(cameraX, cameraY);
+  renderMap(camera.x, camera.y);
 
   // Render players and enemies
   actors.forEach(renderActor);
+  print(actors.length, 0, 0, 14);
 }

@@ -24,7 +24,10 @@ export function createActor (args) {
     maxMoveVelocity: 14,
     maxSprintVelocity: 72,
     currentAnimationFrame: 0,
-    currentAnimation: args.sprites.default
+    currentAnimation: args.sprites.default,
+    allowUpdating: false,
+    allowRendering: false,
+    collidable: true
   }, args);
 }
 

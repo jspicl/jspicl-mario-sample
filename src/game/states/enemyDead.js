@@ -2,7 +2,7 @@ import { updateAnimation } from "../animation";
 
 export function enemyDead (actor, actors, elapsedTime) {
   if (!actor.deathTimer) {
-    actor.dead = true;
+    actor.collidable = false;
     actor.jumpDuration = 0;
     actor.deathTimer = 0;
     actor.yVelocity = 0;
@@ -12,5 +12,11 @@ export function enemyDead (actor, actors, elapsedTime) {
   }
 
   actor.deathTimer += elapsedTime;
+  if (actor.deathTimer > 0.75) {
+    // const index = actors.findIndex(actor);
+    // actors[index] = null;
+    del(actors, actor);
+  }
+
   updateAnimation(actor, elapsedTime);
 }

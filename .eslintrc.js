@@ -26,6 +26,7 @@ module.exports = {
     costatus: true,
     cstore: true,
     cursor: true,
+    del: true,
     dget: true,
     dset: true,
     extcmd: true,
