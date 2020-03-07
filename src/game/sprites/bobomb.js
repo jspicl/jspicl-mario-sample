@@ -1,4 +1,4 @@
-import { createKeyframeAnimation } from "../factories";
+import { createKeyframeAnimation } from "../animation";
 
 export const bobomb = {
   default: createKeyframeAnimation(26, 1, 1, 1, 1),

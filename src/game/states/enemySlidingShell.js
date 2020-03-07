@@ -10,7 +10,7 @@ export function enemySlidingShell (actor, actors, elapsedTime) {
 
   actor.status = "slidingshell";
   actor.direction = actor.direction || DIRECTION_LEFT;
-  actor.targetXVelocity = 72 * actor.direction;
+  actor.targetXVelocity = 88 * actor.direction;
   actor.xVelocity = actor.targetXVelocity;
 
   updatePositionBasedOnMotion(actor, elapsedTime);

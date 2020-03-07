@@ -1,4 +1,4 @@
-import { createKeyframeAnimation } from "../factories";
+import { createKeyframeAnimation } from "../animation";
 
 export const mario = {
   default: createKeyframeAnimation(2, 1, 1, 1, 1),

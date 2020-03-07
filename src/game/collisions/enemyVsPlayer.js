@@ -31,7 +31,7 @@ export function enemyVsPlayer (actor1, actor2) {
     enemy = actor1;
   }
 
-  if (player.y + player.currentAnimation.height < enemy.y + 5) {
+  if (player.y + player.currentAnimation.height < enemy.y + 5 && !enemy.hasSpikes) {
     if (enemy.status === "shelled") {
       enemy.updateState = enemySlidingShell;
       setEnemySlideDirection(player, enemy, false);

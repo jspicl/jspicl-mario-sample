@@ -3,6 +3,7 @@ import { getInput } from "../input";
 import { updateAnimation } from "../animation";
 import { checkForCollisionsAgainstEnvironment } from "../physics";
 import { updatePositionBasedOnMotion } from "../utils";
+import { playerDead } from "./playerDead";
 
 export function player (actor, actors, elapsedTime) {
   actor.status = "active";
@@ -18,7 +19,21 @@ export function player (actor, actors, elapsedTime) {
   // 4. Collision detect & correct
   const collisionInfo = checkForCollisionsAgainstEnvironment(actor, elapsedTime);
 
+  if (actor.x < actors.camera.x) {
+    actor.x = actors.camera.x;
+    collisionInfo.left = true;
+  }
+  else if (actor.x > actors.camera.x + 128) {
+    actor.x = actors.camera.x;
+    collisionInfo.right = true;
+  }
+
   // 5. Respond to collision events
+  if (collisionInfo.lethal) {
+    actor.updateState = playerDead;
+    return;
+  }
+
   if (collisionInfo.left || collisionInfo.right) {
     actor.xVelocity = 0;
     actor.targetXVelocity = 0;

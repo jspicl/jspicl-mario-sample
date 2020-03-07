@@ -1,4 +1,4 @@
-import { createKeyframeAnimation } from "../factories";
+import { createKeyframeAnimation } from "../animation";
 
 export const goomba = {
   default: createKeyframeAnimation(5, 1, 1, 1, 1),

@@ -1,71 +1,42 @@
-import { createActor } from "./factories";
-import { DIRECTION_RIGHT, DIRECTION_LEFT } from "./constants";
+import { DIRECTION_RIGHT } from "./constants";
 import { renderMap } from "./render/render-map";
 import { checkForCollisionsAgainstActors } from "./physics";
-import * as SPRITES from "./sprites";
-import * as STATES from "./states";
+import { cameraVsEnemy, enemyVsPlayer, enemyVsEnemy } from "./collisions";
+import { createGoomba, createKoopa, createPlayerCamera, createPlayer, createRandomEnemy } from "./actorFactories";
 
 let actors = [];
 let player;
 let camera;
 
+const collisionActions = {
+  enemyVsPlayer,
+  enemyVsEnemy,
+  cameraVsEnemy
+};
+
 function reset () {
   actors = [];
-  camera = createActor({
-    type: "camera",
-    updateState: STATES.camera,
-    allowRendering: false,
-    sprites: {
-      default: {
-        width: 128,
-        height: 128
-      }
-    }
-  });
+  camera = createPlayerCamera();
 
-  player = createActor({
-    type: "player",
-    allowRendering: true,
-    updateState: STATES.player,
-    x: 10,
-    y: 30,
-    maxMoveVelocity: 48,
-    direction: DIRECTION_RIGHT,
-    sprites: SPRITES.mario
-  });
+  player = createPlayer(10, 64);
+  actors.push(createRandomEnemy(16 * 8, 64));
 
-  actors.push(createActor({
-    updateState: STATES.enemy,
-    x: 60,
-    y: 30,
-    direction: DIRECTION_LEFT,
-    sprites: SPRITES.goomba
-  }));
+  actors.push(createRandomEnemy(32 * 8, 64));
 
-  actors.push(createActor({
-    updateState: STATES.enemy,
-    x: 82,
-    y: 30,
-    health: 2,
-    direction: DIRECTION_LEFT,
-    sprites: SPRITES.koopa
-  }));
+  actors.push(createRandomEnemy(50 * 8, 64));
+  actors.push(createRandomEnemy(52 * 8, 64));
 
-  actors.push(createActor({
-    updateState: STATES.enemy,
-    x: 104,
-    y: 30,
-    health: 2,
-    direction: DIRECTION_LEFT,
-    sprites: SPRITES.koopa
-  }));
+  actors.push(createRandomEnemy(77 * 8, 24));
+  actors.push(createRandomEnemy(79 * 8, 0));
 
-  // actors.push(createActor({
-  //   updateState: STATES.simpleEnemy,
-  //   sprites: SPRITES.koopa,
-  //   direction: DIRECTION_LEFT,
-  //   x: 80
-  // }));
+  actors.push(createRandomEnemy(91 * 8, 64));
+  actors.push(createRandomEnemy(92 * 8, 64));
+
+  actors.push(createRandomEnemy(97 * 8, 64));
+
+  actors.push(createRandomEnemy(106 * 8, 64));
+  actors.push(createRandomEnemy(108 * 8, 64));
+  actors.push(createRandomEnemy(110 * 8, 64));
 
   actors.push(player);
   actors.push(camera);
@@ -88,7 +59,7 @@ export function update (elapsedTime) {
   }
   else {
     actors.forEach(actor => actor.updateState(actor, actors, elapsedTime));
-    checkForCollisionsAgainstActors(actors);
+    checkForCollisionsAgainstActors(actors, collisionActions);
   }
 }
 
@@ -102,7 +73,7 @@ function renderActor (actor) {
   spr(
     currentAnimation.index + actor.currentAnimationFrame,
     actor.x - camera.x,
-    actor.y - currentAnimation.height,
+    actor.y - currentAnimation.height - camera.y,
     currentAnimation.widthCells,
     currentAnimation.heightCells,
     actor.facingDirection === DIRECTION_RIGHT,
@@ -116,5 +87,5 @@ export function draw () {
 
   // Render players and enemies
   actors.forEach(renderActor);
-  print(actors.length, 0, 0, 14);
+  print("ctrl+r to reload", 0, 0, 14);
 }

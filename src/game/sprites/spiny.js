@@ -1,4 +1,4 @@
-import { createKeyframeAnimation } from "../factories";
+import { createKeyframeAnimation } from "../animation";
 
 export const spiny = {
   default: createKeyframeAnimation(21, 1, 1, 1, 1),

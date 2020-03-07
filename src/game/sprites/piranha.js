@@ -1,4 +1,4 @@
-import { createKeyframeAnimation } from "../factories";
+import { createKeyframeAnimation } from "../animation";
 
 export const piranha = {
   default: createKeyframeAnimation(28, 1, 0, 2, 1),

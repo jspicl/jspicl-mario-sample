@@ -1,4 +1,4 @@
-import { createKeyframeAnimation } from "../factories";
+import { createKeyframeAnimation } from "../animation";
 
 export const blooper = {
   default: createKeyframeAnimation(12, 2, 0.5, 1, 1),

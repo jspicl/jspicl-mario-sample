@@ -1,5 +1,11 @@
 import { CELL_SIZE, TERMINAL_VELOCITY, GRAVITY } from "./constants";
 
+let counter = 0;
+export function generateUniqueId () {
+  counter = (counter + 1) % 100;
+  return counter;
+}
+
 export function roundToNearestCell (value) {
   return Math.floor(value / CELL_SIZE);
 }

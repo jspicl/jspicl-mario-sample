@@ -1,32 +1,33 @@
 import { CELL_SIZE } from "./constants";
 import { roundToNearestCell, lerp } from "./utils";
-import { cameraVsEnemy, enemyVsPlayer, enemyVsEnemy } from "./collisions";
 
+function getCellState (x, y, flag) {
+  return fget(mget(x, y), flag);
+}
 function isSolid (x, y) {
-  return fget(mget(x, y), 0);
+  return getCellState(x, y, 0);
 }
 
 function isPlatform (x, y) {
-  return fget(mget(x, y), 1);
+  return getCellState(x, y, 1);
 }
 
-const collisionAction = {
-  enemyVsPlayer,
-  enemyVsEnemy,
-  cameraVsEnemy
-};
+function isLethal (x, y) {
+  return getCellState(x, y, 7);
+}
 
-export function checkForCollisionsAgainstActors (actors) {
-  const collisionMap = {};
+export function checkForCollisionsAgainstActors (actors, collisionActions) {
+  const alreadyExecutedCollisions = {};
 
+  // Very naive and non performant collision detection
   actors.forEach(actor => {
     actors.forEach(target => {
       const id = Math.min(actor.id, target.id) * 1000 + Math.max(actor.id, target.id);
-      if (!actor.allowCollisions || !target.allowCollisions || actor === target || collisionMap[id]) {
+      if (!actor.allowCollisions || !target.allowCollisions || actor === target || alreadyExecutedCollisions[id]) {
         return;
       }
 
-      collisionMap[id] = true;
+      alreadyExecutedCollisions[id] = true;
 
       if (
         actor.x + 1 < target.x + target.currentAnimation.width - 1
@@ -34,7 +35,7 @@ export function checkForCollisionsAgainstActors (actors) {
         && actor.y + 1 < target.y + target.currentAnimation.height - 1
         && actor.y + actor.currentAnimation.height - 1 > target.y + 1) {
         const type = [actor.type, target.type].sort().join("vs");
-        const colliderAction = collisionAction[type];
+        const colliderAction = collisionActions[type];
         if (colliderAction) {
           colliderAction(actor, target);
         }
@@ -56,6 +57,11 @@ export function checkForCollisionsAgainstEnvironment (actor) {
   const verticalCollisionMarkerRight = roundToNearestCell(x + width / 4 * 3);
   const sideCollisionMarkerTop = roundToNearestCell(y - height / 4);
   const sideCollisionMarkerBottom = roundToNearestCell(y - height / 4 * 3);
+
+  if (isLethal(left, top) || isLethal(left, bottom) || isLethal(right, top) || isLethal(right, bottom)) {
+    collisionInfo.lethal = true;
+    return collisionInfo;
+  }
 
   const isCollidingLeft = isSolid(left, sideCollisionMarkerBottom) || isSolid(left, sideCollisionMarkerTop);
   if (isCollidingLeft) {
