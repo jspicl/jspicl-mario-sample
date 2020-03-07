@@ -1,77 +1,91 @@
-import { createActor } from "./factories";
-import { CELL_SIZE, DIRECTION_RIGHT, DIRECTION_LEFT } from "./constants";
-import { roundToNearestCell } from "./utils";
-import * as SPRITES from "./sprites";
-import * as STATES from "./states";
-import { clearLog, clearDebugRender } from "./debug";
+import { DIRECTION_RIGHT } from "./constants";
+import { renderMap } from "./render/render-map";
+import { checkForCollisionsAgainstActors } from "./physics";
+import { cameraVsEnemy, enemyVsPlayer, enemyVsEnemy } from "./collisions";
+import { createGoomba, createKoopa, createPlayerCamera, createPlayer, createRandomEnemy } from "./actorFactories";
 
-const actors = [];
+let actors = [];
 let player;
+let camera;
 
-export function init () {
-  player = createActor({
-    updateState: STATES.player,
-    x: 40,
-    y: 30,
-    direction: DIRECTION_RIGHT,
-    sprites: SPRITES.mario,
-    moveVelocity: 0.85,
-    jumpVelocity: 1.9
-  });
+const collisionActions = {
+  enemyVsPlayer,
+  enemyVsEnemy,
+  cameraVsEnemy
+};
 
-  actors.push(createActor({
-    updateState: STATES.simpleEnemy,
-    sprites: SPRITES.goomba,
-    direction: DIRECTION_LEFT,
-    x: 120,
-    moveVelocity: 0.28
-  }));
+function reset () {
+  actors = [];
+  camera = createPlayerCamera();
+
+  player = createPlayer(10, 64);
+  actors.push(createRandomEnemy(16 * 8, 64));
+
+  actors.push(createRandomEnemy(32 * 8, 64));
+
+  actors.push(createRandomEnemy(50 * 8, 64));
+  actors.push(createRandomEnemy(52 * 8, 64));
+
+  actors.push(createRandomEnemy(77 * 8, 24));
+  actors.push(createRandomEnemy(79 * 8, 0));
+
+  actors.push(createRandomEnemy(91 * 8, 64));
+  actors.push(createRandomEnemy(92 * 8, 64));
+
+  actors.push(createRandomEnemy(97 * 8, 64));
+
+  actors.push(createRandomEnemy(106 * 8, 64));
+  actors.push(createRandomEnemy(108 * 8, 64));
+  actors.push(createRandomEnemy(110 * 8, 64));
 
   actors.push(player);
+  actors.push(camera);
+
+  actors.camera = camera;
+  actors.player = player;
+}
+
+export function init () {
+  reset();
 }
 
 export function update (elapsedTime) {
-  clearLog();
-  clearDebugRender();
-  actors.forEach(actor => {
-    actor.updateState(actor, elapsedTime);
-  });
+  cls();
+  if (player.status === "dead") {
+    player.updateState(player, actors, elapsedTime);
+    if (player.reset) {
+      reset();
+    }
+  }
+  else {
+    actors.forEach(actor => actor.updateState(actor, actors, elapsedTime));
+    checkForCollisionsAgainstActors(actors, collisionActions);
+  }
 }
 
 function renderActor (actor) {
-  const sprite = actor.currentAnimation;
+  const { currentAnimation, allowRendering } = actor;
 
-  sspr(
-    (sprite.index + Math.floor(actor.cursor) * sprite.widthUnits) % 16 * CELL_SIZE,
-    Math.floor(sprite.index / 16) * CELL_SIZE,
-    sprite.widthUnits * CELL_SIZE,
-    sprite.heightUnits * CELL_SIZE,
-    actor.x,
-    actor.y,
-    actor.scale * sprite.widthUnits * CELL_SIZE,
-    actor.scale * sprite.heightUnits * CELL_SIZE,
-    actor.direction === DIRECTION_RIGHT);
+  if (!allowRendering) {
+    return;
+  }
+
+  spr(
+    currentAnimation.index + actor.currentAnimationFrame,
+    actor.x - camera.x,
+    actor.y - currentAnimation.height - camera.y,
+    currentAnimation.widthCells,
+    currentAnimation.heightCells,
+    actor.facingDirection === DIRECTION_RIGHT,
+    actor.flipV
+  );
 }
 
-let cameraX = 0;
-
 export function draw () {
-  cameraX = Math.max(player.x - 60, cameraX);
-  const cameraY = 0;
-
-  cls();
-  camera(cameraX, cameraY);
-
-  // Draw the proper map region
-  const xCell = roundToNearestCell(cameraX);
-  const yCell = roundToNearestCell(cameraY);
-  map(
-    xCell,
-    yCell,
-    xCell * CELL_SIZE,
-    yCell * CELL_SIZE,
-    17, 17);
+  // cls();
+  renderMap(camera.x, camera.y);
 
   // Render players and enemies
   actors.forEach(renderActor);
+  print("ctrl+r to reload", 0, 0, 14);
 }

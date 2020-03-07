@@ -1,6 +1,9 @@
-import { createKeyframeAnimation } from "../factories";
+import { createKeyframeAnimation } from "../animation";
 
 export const koopa = {
-  default: createKeyframeAnimation(7, 1, 1, 1, 1),
-  run: createKeyframeAnimation(7, 2, 0.3, 1, 1)
+  default: createKeyframeAnimation(8, 1, 1, 1, 1),
+  run: createKeyframeAnimation(8, 2, 0.3, 1, 1),
+  dead: createKeyframeAnimation(10, 1, 1, 1, 1),
+  shelled: createKeyframeAnimation(10, 1, 1, 1, 1),
+  slidingShell: createKeyframeAnimation(10, 2, 0.15, 1, 1)
 };

@@ -1,4 +1,4 @@
-import { createKeyframeAnimation } from "../factories";
+import { createKeyframeAnimation } from "../animation";
 
 export const buzzyBeetle = {
   default: createKeyframeAnimation(23, 1, 1, 1, 1),
