@@ -1,22 +1,23 @@
 import { updateAnimation } from "../animation";
+import { updatePositionBasedOnMotion } from "../utils";
 
 export function enemyDead (actor, actors, elapsedTime) {
-  if (!actor.deathTimer) {
-    actor.collidable = false;
+  if (actor.status !== "dead") {
+    actor.status = "dead";
+    actor.allowCollisions = false;
     actor.jumpDuration = 0;
     actor.deathTimer = 0;
-    actor.yVelocity = 0;
+    actor.yVelocity = -75;
     actor.currentAnimation = actor.sprites.dead;
-    actor.targetXVelocity = 0;
-    actor.xVelocity = 0;
+    actor.flipV = true;
   }
 
-  actor.deathTimer += elapsedTime;
+  updatePositionBasedOnMotion(actor, elapsedTime);
+
   if (actor.deathTimer > 0.75) {
-    // const index = actors.findIndex(actor);
-    // actors[index] = null;
     del(actors, actor);
   }
 
+  actor.deathTimer += elapsedTime;
   updateAnimation(actor, elapsedTime);
 }

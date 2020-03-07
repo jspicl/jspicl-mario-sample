@@ -1,15 +1,12 @@
-import { updatePositionBasedOnMotion } from "../utils";
+import { updatePositionBasedOnMotion, resetMomentum } from "../utils";
 import { updateAnimation } from "../animation";
 
 export function playerDead (actor, actors, elapsedTime) {
-  if (!actor.deathTimer) {
-    actor.dead = true;
-    actor.jumpDuration = 0;
+  if (actor.status !== "dead") {
+    resetMomentum(actor);
+    actor.status = "dead";
     actor.deathTimer = 0;
-    actor.yVelocity = 0;
     actor.currentAnimation = actor.sprites.dead;
-    actor.targetXVelocity = 0;
-    actor.xVelocity = 0;
   }
 
   if (actor.deathTimer > 0.4) {

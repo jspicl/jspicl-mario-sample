@@ -9,6 +9,7 @@ function generateUniqueId () {
 export function createActor (args) {
   return Object.assign({
     id: generateUniqueId(),
+    status: "active",
     x: 0,
     y: 0,
     health: 1,
@@ -16,7 +17,6 @@ export function createActor (args) {
     direction: DIRECTION_RIGHT,
     facingDirection: DIRECTION_RIGHT,
     targetXVelocity: 0,
-    targetYVelocity: TERMINAL_VELOCITY,
     xVelocity: 0,
     yVelocity: 0,
     jumpDuration: 0,
@@ -25,9 +25,10 @@ export function createActor (args) {
     maxSprintVelocity: 72,
     currentAnimationFrame: 0,
     currentAnimation: args.sprites.default,
+
     allowUpdating: false,
     allowRendering: false,
-    collidable: true
+    allowCollisions: true
   }, args);
 }
 

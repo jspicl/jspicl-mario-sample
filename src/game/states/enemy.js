@@ -3,10 +3,12 @@ import { checkForCollisionsAgainstEnvironment } from "../physics";
 import { updatePositionBasedOnMotion } from "../utils";
 import { updateAnimation } from "../animation";
 
-export function simpleEnemy (actor, actors, elapsedTime) {
+export function enemy (actor, actors, elapsedTime) {
   if (!actor.allowUpdating) {
     return;
   }
+
+  actor.status = "active";
   // 1. Collect input
 
   // 2. Update motion based on input

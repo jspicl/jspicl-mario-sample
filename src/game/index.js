@@ -35,7 +35,7 @@ function reset () {
   });
 
   actors.push(createActor({
-    updateState: STATES.simpleEnemy,
+    updateState: STATES.enemy,
     x: 60,
     y: 30,
     direction: DIRECTION_LEFT,
@@ -43,17 +43,17 @@ function reset () {
   }));
 
   actors.push(createActor({
-    updateState: STATES.simpleEnemy,
-    allowUpdating: false,
-    x: 170,
+    updateState: STATES.enemy,
+    x: 82,
     y: 30,
+    health: 2,
     direction: DIRECTION_LEFT,
-    sprites: SPRITES.goomba
+    sprites: SPRITES.koopa
   }));
 
   actors.push(createActor({
-    updateState: STATES.simpleEnemy,
-    x: 80,
+    updateState: STATES.enemy,
+    x: 104,
     y: 30,
     health: 2,
     direction: DIRECTION_LEFT,
@@ -80,7 +80,7 @@ export function init () {
 
 export function update (elapsedTime) {
   cls();
-  if (player.dead) {
+  if (player.status === "dead") {
     player.updateState(player, actors, elapsedTime);
     if (player.reset) {
       reset();
@@ -105,7 +105,9 @@ function renderActor (actor) {
     actor.y - currentAnimation.height,
     currentAnimation.widthCells,
     currentAnimation.heightCells,
-    actor.facingDirection === DIRECTION_RIGHT);
+    actor.facingDirection === DIRECTION_RIGHT,
+    actor.flipV
+  );
 }
 
 export function draw () {

@@ -5,6 +5,7 @@ import { checkForCollisionsAgainstEnvironment } from "../physics";
 import { updatePositionBasedOnMotion } from "../utils";
 
 export function player (actor, actors, elapsedTime) {
+  actor.status = "active";
   // 1. Collect input
   actor.input = getInput();
 

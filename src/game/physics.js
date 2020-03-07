@@ -22,7 +22,7 @@ export function checkForCollisionsAgainstActors (actors) {
   actors.forEach(actor => {
     actors.forEach(target => {
       const id = Math.min(actor.id, target.id) * 1000 + Math.max(actor.id, target.id);
-      if (!actor.collidable || !target.collidable || actor === target || collisionMap[id]) {
+      if (!actor.allowCollisions || !target.allowCollisions || actor === target || collisionMap[id]) {
         return;
       }
 

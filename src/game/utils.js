@@ -24,6 +24,13 @@ export function deadZone (value, threshold) {
   return Math.abs(value) <= threshold ? 0 : value;
 }
 
+export function resetMomentum (actor) {
+  actor.jumpDuration = 0;
+  actor.yVelocity = 0;
+  actor.targetXVelocity = 0;
+  actor.xVelocity = 0;
+}
+
 export function updatePositionBasedOnMotion (actor, elapsedTime) {
   let { acceleration } = actor;
   if (actor.targetXVelocity < 0) {
