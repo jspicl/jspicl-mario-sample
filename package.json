@@ -4,26 +4,21 @@
   "repository": {
     "url": "https://github.com/AgronKabashi/jspicl-mario-sample"
   },
+  "type": "module",
   "description": "A very simplistic mario game build for PICO-8 and written in JavaScript",
   "scripts": {
     "restore-cart": "cross-env copyfiles game.p8 build",
-    "prebuild": "npm run restore-cart -- -s",
-    "build": "jspicl-cli --input src/index.js --output build/game.p8 --spritesheetImagePath spritesheet.png --cartridgePath build/game.p8",
-    "start": "npm run build -s -- --watch --jsOutput --luaOutput --pipeOutputToConsole"
+    "prebuild": "yarn restore-cart -s",
+    "build": "jspicl src/index.js build/game.p8 -c ./jspicl.config.js",
+    "start": "npm run build -- --watch"
   },
-  "eslintIgnore": [
-    "build"
-  ],
   "author": "Agron Kabashi",
   "license": "MIT",
   "devDependencies": {
-    "@agronkabashi/eslint-config": "^1.1.0",
-    "babel-core": "^6.26.3",
-    "babel-eslint": "^10.0.2",
-    "chokidar": "^3.2.2",
-    "copyfiles": "^2.1.1",
-    "cross-env": "^6.0.3",
-    "eslint": "^6.1.0",
-    "jspicl-cli": "^0.4.0"
-  }
+    "@jspicl/cli": "4.0.0-alpha.4",
+    "copyfiles": "^2.4.1",
+    "cross-env": "^10.1.0",
+    "untildify": "^6.0.0"
+  },
+  "packageManager": "yarn@4.12.0"
 }
