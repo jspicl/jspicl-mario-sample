@@ -194,11 +194,11 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@jspicl/cli@npm:4.0.0-alpha.4":
-  version: 4.0.0-alpha.4
-  resolution: "@jspicl/cli@npm:4.0.0-alpha.4"
+"@jspicl/cli@npm:4.0.0":
+  version: 4.0.0
+  resolution: "@jspicl/cli@npm:4.0.0"
   dependencies:
-    "@jspicl/core": "npm:^4.0.0-alpha.4"
+    "@jspicl/core": "npm:^4.0.0"
     chokidar: "npm:^5.0.0"
     esbuild: "npm:^0.25.0"
     lodash.debounce: "npm:^4.0.8"
@@ -209,17 +209,17 @@ __metadata:
     yargs: "npm:^18.0.0"
   bin:
     jspicl: dist/cli.js
-  checksum: 10c0/e6f9a301d3e02975f25a1618ecf5f3d98c7eed772a571dcf6181bbbfecd9078d3002e8fd79f209176a6e1ee089eeb46fc3d98bb43b8fb37ef6916115f6c9f450
+  checksum: 10c0/e300a344efb0901b1ccabdb07408386528d0d86f396c50ee2233f552351a428550d9381d2a88b56ed31ae32822a948d245bfe327b3a334082bb5a0b866d7722d
   languageName: node
   linkType: hard
 
-"@jspicl/core@npm:^4.0.0-alpha.4":
-  version: 4.0.0-alpha.4
-  resolution: "@jspicl/core@npm:4.0.0-alpha.4"
+"@jspicl/core@npm:^4.0.0":
+  version: 4.0.0
+  resolution: "@jspicl/core@npm:4.0.0"
   dependencies:
     esprima: "npm:^4.0.1"
     trastpiler: "npm:^2.0.0"
-  checksum: 10c0/b41c525a07f03fa00ac50e599f2996aaa9cc15fc3ebe7f0f0c0c2afb062ff9c9922e8afedea2b5a006ac78f04a277d861524bdd7c2fe0b203c94560cb14d475f
+  checksum: 10c0/3710e1516d42bac3e728249b62b4812c94fa4d9c7688b4166632b20ea7cf65e2a8f303265e1ab995cf54dbb1499c6ef4dd81cadee68b316df87559cb25b471a9
   languageName: node
   linkType: hard
 
@@ -584,10 +584,9 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "jspicl-mario-sample@workspace:."
   dependencies:
-    "@jspicl/cli": "npm:4.0.0-alpha.4"
+    "@jspicl/cli": "npm:4.0.0"
     copyfiles: "npm:^2.4.1"
     cross-env: "npm:^10.1.0"
-    untildify: "npm:^6.0.0"
   languageName: unknown
   linkType: soft
 
