@@ -10,7 +10,7 @@
     "restore-cart": "cross-env copyfiles game.p8 build",
     "prebuild": "yarn restore-cart -s",
     "build": "jspicl src/index.js build/game.p8 -c ./jspicl.config.js",
-    "start": "yarn build --watch"
+    "start": "yarn prebuild && yarn build --watch"
   },
   "author": "Agron Kabashi",
   "license": "MIT",
