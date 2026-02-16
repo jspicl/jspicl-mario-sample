@@ -3,7 +3,7 @@ import { checkForCollisionsAgainstEnvironment } from "../physics";
 import { updatePositionBasedOnMotion } from "../utils";
 import { updateAnimation } from "../animation";
 
-export function enemy (actor, actors, elapsedTime) {
+export function enemy(actor, actors, elapsedTime) {
   if (!actor.allowUpdating) {
     return;
   }
@@ -19,7 +19,10 @@ export function enemy (actor, actors, elapsedTime) {
   updatePositionBasedOnMotion(actor, elapsedTime);
 
   // 4. Collision detect & correct
-  const collisionInfo = checkForCollisionsAgainstEnvironment(actor, elapsedTime);
+  const collisionInfo = checkForCollisionsAgainstEnvironment(
+    actor,
+    elapsedTime,
+  );
 
   // 5. Respond to collision events
   if (collisionInfo.ground) {
@@ -48,4 +51,3 @@ export function enemy (actor, actors, elapsedTime) {
   actor.currentAnimation = animation;
   updateAnimation(actor, elapsedTime);
 }
-

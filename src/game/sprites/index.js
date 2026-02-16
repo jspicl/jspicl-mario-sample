@@ -8,4 +8,3 @@ export * from "./mario";
 export * from "./piranha";
 export * from "./platform";
 export * from "./spiny";
-

@@ -2,7 +2,7 @@ import { updateAnimation } from "../animation";
 import { enemy } from "./enemy";
 import { resetMomentum } from "../utils";
 
-export function enemyShelled (actor, actors, elapsedTime) {
+export function enemyShelled(actor, actors, elapsedTime) {
   if (actor.status !== "shelled") {
     resetMomentum(actor);
     actor.status = "shelled";

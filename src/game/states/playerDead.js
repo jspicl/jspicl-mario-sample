@@ -1,7 +1,7 @@
 import { updatePositionBasedOnMotion, resetMomentum } from "../utils";
 import { updateAnimation } from "../animation";
 
-export function playerDead (actor, actors, elapsedTime) {
+export function playerDead(actor, actors, elapsedTime) {
   if (actor.status !== "dead") {
     resetMomentum(actor);
     actor.status = "dead";

@@ -2,7 +2,11 @@ import { DIRECTION_RIGHT } from "./constants";
 import { renderMap } from "./render/render-map";
 import { checkForCollisionsAgainstActors } from "./physics";
 import { cameraVsEnemy, enemyVsPlayer, enemyVsEnemy } from "./collisions";
-import { createGoomba, createKoopa, createPlayerCamera, createPlayer, createRandomEnemy } from "./actorFactories";
+import {
+  createPlayerCamera,
+  createPlayer,
+  createRandomEnemy,
+} from "./actorFactories";
 
 let actors = [];
 let player;
@@ -11,10 +15,10 @@ let camera;
 const collisionActions = {
   enemyVsPlayer,
   enemyVsEnemy,
-  cameraVsEnemy
+  cameraVsEnemy,
 };
 
-function reset () {
+function reset() {
   actors = [];
   camera = createPlayerCamera();
 
@@ -45,25 +49,24 @@ function reset () {
   actors.player = player;
 }
 
-export function init () {
+export function init() {
   reset();
 }
 
-export function update (elapsedTime) {
+export function update(elapsedTime) {
   cls();
   if (player.status === "dead") {
     player.updateState(player, actors, elapsedTime);
     if (player.reset) {
       reset();
     }
-  }
-  else {
-    actors.forEach(actor => actor.updateState(actor, actors, elapsedTime));
+  } else {
+    actors.forEach((actor) => actor.updateState(actor, actors, elapsedTime));
     checkForCollisionsAgainstActors(actors, collisionActions);
   }
 }
 
-function renderActor (actor) {
+function renderActor(actor) {
   const { currentAnimation, allowRendering } = actor;
 
   if (!allowRendering) {
@@ -77,15 +80,14 @@ function renderActor (actor) {
     currentAnimation.widthCells,
     currentAnimation.heightCells,
     actor.facingDirection === DIRECTION_RIGHT,
-    actor.flipV
+    actor.flipV,
   );
 }
 
-export function draw () {
+export function draw() {
   // cls();
   renderMap(camera.x, camera.y);
 
   // Render players and enemies
   actors.forEach(renderActor);
-  print("ctrl+r to reload", 0, 0, 14);
 }

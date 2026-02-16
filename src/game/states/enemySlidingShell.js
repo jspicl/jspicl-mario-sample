@@ -3,7 +3,7 @@ import { updatePositionBasedOnMotion } from "../utils";
 import { DIRECTION_LEFT, DIRECTION_RIGHT } from "../constants";
 import { checkForCollisionsAgainstEnvironment } from "../physics";
 
-export function enemySlidingShell (actor, actors, elapsedTime) {
+export function enemySlidingShell(actor, actors, elapsedTime) {
   if (!actor.allowUpdating) {
     return;
   }
@@ -16,7 +16,10 @@ export function enemySlidingShell (actor, actors, elapsedTime) {
   updatePositionBasedOnMotion(actor, elapsedTime);
 
   // 4. Collision detect & correct
-  const collisionInfo = checkForCollisionsAgainstEnvironment(actor, elapsedTime);
+  const collisionInfo = checkForCollisionsAgainstEnvironment(
+    actor,
+    elapsedTime,
+  );
 
   // 5. Respond to collision events
   if (collisionInfo.ground) {

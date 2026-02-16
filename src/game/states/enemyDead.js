@@ -1,7 +1,7 @@
 import { updateAnimation } from "../animation";
 import { updatePositionBasedOnMotion } from "../utils";
 
-export function enemyDead (actor, actors, elapsedTime) {
+export function enemyDead(actor, actors, elapsedTime) {
   if (actor.status !== "dead") {
     actor.status = "dead";
     actor.allowCollisions = false;

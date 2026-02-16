@@ -1,7 +1,7 @@
 import { updateAnimation } from "../animation";
 import { resetMomentum } from "../utils";
 
-export function enemySquashed (actor, actors, elapsedTime) {
+export function enemySquashed(actor, actors, elapsedTime) {
   if (actor.status !== "dead") {
     resetMomentum(actor);
     actor.status = "dead";
