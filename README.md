@@ -8,7 +8,7 @@ A Super Mario Bros. inspired platformer game for PICO-8, written entirely in Jav
 
 Before you begin, ensure you have the following installed:
 
-- [Node.js](https://nodejs.org/) (v14 or higher)
+- [Node.js](https://nodejs.org/) (v22 or higher)
 - [Yarn](https://yarnpkg.com/) (v1.22 or higher)
 - [PICO-8](https://www.lexaloffle.com/pico-8.php) (full version required)
 
