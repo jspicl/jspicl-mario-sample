@@ -15,7 +15,7 @@
   "author": "Agron Kabashi",
   "license": "MIT",
   "devDependencies": {
-    "@jspicl/cli": "4.0.0",
+    "@jspicl/cli": "^4.0.2",
     "copyfiles": "^2.4.1",
     "cross-env": "^10.1.0"
   },
