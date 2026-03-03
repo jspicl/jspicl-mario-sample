@@ -13,9 +13,10 @@
     "start": "yarn prebuild && yarn build --watch"
   },
   "author": "Agron Kabashi",
+  "homepage": "https://jspicl.github.io",
   "license": "MIT",
   "devDependencies": {
-    "@jspicl/cli": "^4.0.2",
+    "@jspicl/cli": "^4.0.3",
     "copyfiles": "^2.4.1",
     "cross-env": "^10.1.0"
   },
